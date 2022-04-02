@@ -7,6 +7,7 @@ $checkAuth = function ($code) use($pdo){
         $stmt->execute(array(':security' => $code));
         $auth = $stmt->rowCount();
         if($auth < 1){
+            return "Non-Auth";
             exit();
         }
     }catch (PDOException $e){
@@ -14,24 +15,49 @@ $checkAuth = function ($code) use($pdo){
     }
 };
 
-$imageToBase64 = function($url){
-    $image = $url;
-    $imageData = base64_encode(file_get_contents($image));
-    $mime = mime_content_type("https://i.pinimg.com/originals/1c/54/f7/1c54f7b06d7723c21afc5035bf88a5ef.png");
-    $convert = "data: " . $mime . ";base64," . $imageData;
-    echo $convert;
-};
-
-$checkAccess = function($code) use($pdo){
+$checkAccess = function($code, $redirect) use($pdo){
     try{
         $stmt = $pdo->prepare("SELECT * FROM users WHERE security = :security");
         $stmt->execute(array(':security' => $code));
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if($result['access'] !== "Admin"){
-            exit();
+            $checkRed = ($redirect == true) ? header('Location: home.php') : "User";
+            return $checkRed;
+        }
+        else{
+            return "Admin";
         }
     }catch (PDOException $e){
         echo $e->getMessage();
     }
-}
+};
+
+$getUsername = function ($security) use($pdo){
+    try{
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE security = :security");
+        $stmt->execute(array(':security' => $security));
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['username'];
+    }catch(PDOException $e){
+        echo $e->getMessage();
+    }
+};
+
+$totalRowFoods = function() use($pdo){
+    try{
+        $stmt = $pdo->prepare("SELECT * FROM foods");
+        $stmt->execute();
+        echo $stmt->rowCount();
+    }catch(PDOException $e){
+        echo $e->getMessage();
+    }
+};
+
+$imageToBase64 = function($url){
+    $image = "../" . $url;
+    $imageData = base64_encode(file_get_contents($image));
+    $mime = mime_content_type($image);
+    $convert = "data: " . $mime . ";base64," . $imageData;
+    echo $convert;
+};
 ?>

@@ -5,7 +5,7 @@ include('connection.php');
 include('utility.php');
 
 $code = $checkAuth($_SESSION['user']);
-$access = $checkAccess($_SESSION['user']);
+$access = $checkAccess($_SESSION['user'], true);
 $time = date('y-m-d H:i:s', time());
 
 $reff = $_SERVER['HTTP_REFERER'];
@@ -30,5 +30,5 @@ try{
 } catch (PDOException $e){
     echo $e->getMessage();
 }
-
+$pdo = null;
 ?>

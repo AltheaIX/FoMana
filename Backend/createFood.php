@@ -6,7 +6,7 @@ include('connection.php');
 include('utility.php');
 
 $code = $checkAuth($_SESSION['user']);
-$access = $checkAccess($_SESSION['user']);
+$access = $checkAccess($_SESSION['user'], true);
 $name = "Veve";
 $image = "https://asset.kompas.com/crops/89gV9XIgLw8Tzv2im_h4C9aEjd8=/0x0:993x662/750x500/data/photo/2021/03/27/605ed24c33816.jpg";
 $price = 5000;
@@ -24,4 +24,5 @@ try{
 } catch (PDOException $e){
     echo $e->getMessage();
 }
+$pdo = null;
 ?>

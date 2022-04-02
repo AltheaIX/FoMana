@@ -1,10 +1,11 @@
 <?php
+error_reporting(1);
 session_start();
 date_default_timezone_set('Asia/Bangkok');
 include('connection.php');
 
-$username = $_GET['username'];
-$password = md5($_GET['password']);
+$username = $_POST['username'];
+$password = md5($_POST['password']);
 $time = date('y-m-d H:i:s', time());
 
 try{
